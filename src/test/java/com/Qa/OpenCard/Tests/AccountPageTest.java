@@ -16,7 +16,7 @@ public class AccountPageTest extends BaseTest {
 	// page class object, so we have to store this under account page class
 	// reference
 	// but reference we have maintain in the BaseTest class, because we have call
-	// this accountpage reference in our other test method in thic class
+	// this account page reference in our other test method in this class
 	@BeforeTest
 	public void accPageSetup() {
 		accpage = loginpage.doLogin(prop.getProperty("username"), prop.getProperty("password"));
