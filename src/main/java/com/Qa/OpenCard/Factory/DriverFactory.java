@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -13,6 +15,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.Qa.OpenCard.Utils.Browser;
@@ -51,15 +54,28 @@ public class DriverFactory {
 		if (browserName.equalsIgnoreCase(Browser.CHROME_BROWSER_VALUE)) {// we can create one interfacefor broswer and
 																			// call that value directly as data type in
 																			// interface are static and final in nature
+		if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+			init_remoteWebDriver(Browser.CHROME_BROWSER_VALUE);
+		}else {
+			//local
 			WebDriverManager.chromedriver().setup();
 			//System.setProperty(Browser.CHROME_DRIVER_BINARY_KEY, Browser.CHROME_DRIVER_PATH);
 			// driver = new ChromeDriver(optionsmanager.getChromeOptions());
 			tdriver.set(new ChromeDriver(optionsmanager.getChromeOptions()));
+		}
+			
+			
 		} else if (browserName.equalsIgnoreCase(Browser.FIREFOX_BROWSER_VALUE)) {
-			WebDriverManager.firefoxdriver().setup();
-			//System.setProperty(Browser.GECKO_DRIVER_BINARY_KEY, Browser.GECKO_DRIVER_PATH);
-			// driver = new FirefoxDriver(optionsmanager.getFirefoxOptions());
-			tdriver.set(new FirefoxDriver(optionsmanager.getFirefoxOptions()));
+			
+			if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+				init_remoteWebDriver(Browser.FIREFOX_BROWSER_VALUE);
+			}else {
+				WebDriverManager.firefoxdriver().setup();
+				//System.setProperty(Browser.GECKO_DRIVER_BINARY_KEY, Browser.GECKO_DRIVER_PATH);
+				// driver = new FirefoxDriver(optionsmanager.getFirefoxOptions());
+				tdriver.set(new FirefoxDriver(optionsmanager.getFirefoxOptions()));
+			}
+			
 		} else if (browserName.equalsIgnoreCase(Browser.SAFARI_BROWSER_VALUE)) {
 			driver = new SafariDriver();
 			tdriver.set(new SafariDriver());
@@ -73,7 +89,28 @@ public class DriverFactory {
 		// getDriver().get(prop.getProperty("url"));
 		return getDriver();
 	}
-
+/**
+ * this method is used to run tests on remote docker machine 
+ * @param browserName
+ */
+	private void init_remoteWebDriver(String browserName) {
+			
+		System.out.println("Running test cases on remote grid" +browserName);
+			if(browserName.equalsIgnoreCase("chrome"))	{
+				try {
+				tdriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsmanager.getChromeOptions()));
+			} catch (MalformedURLException e){
+				e.printStackTrace();
+			}
+			}else {if(browserName.equalsIgnoreCase("firefox"))	{
+					try {
+					tdriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsmanager.getFirefoxOptions()));
+				} catch (MalformedURLException e){
+					e.printStackTrace();
+				}
+				}
+			}
+	}
 	/**
 	 * This method is used to initialize the properties on the basis of given
 	 * environment: QA/DEV/Stage/PROD

@@ -14,21 +14,21 @@
 	</listeners>
 
       
-	<test name="Open Cart Login Page Test _ chrome_103">
-		<parameter name="browser" value="chrome1" />
-		<parameter name="browserversion" value="103.0" />
+	<test name="Open Cart Login Page Test _ chrome">
+		<parameter name="browser" value="chrome" />
+		
 		<classes>
 			<class name="com.Qa.OpenCard.Tests.LoginPageTest" />
 		</classes>
 	</test>
 
-  <!--    <test name="Open Cart Negative Login Page Test _ chrome_91">
+    <test name="Open Cart Negative Login Page Test _ chrome">
 		<parameter name="browser" value="chrome" />
-		<parameter name="browserversion" value="91.0" />
+		
 		<classes>
 			<class name="com.Qa.OpenCard.Tests.LoginPageNegativeTest" />
 		</classes>
-	</test> -->
+	</test> 
 
 	<!-- <test name="Open Cart Login Page Test _ chrome_91">
 		<parameter name="browser" value="chrome" />

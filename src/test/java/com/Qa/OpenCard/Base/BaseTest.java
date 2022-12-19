@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
 
 import com.Qa.OpenCard.Factory.DriverFactory;
@@ -27,10 +28,22 @@ public class BaseTest {
 
 	public SoftAssert softAssert;
 
+	/** 
+	 * On Top of before test method we have to add testNG parameters that we have added on test runners files 
+	 * 
+	 */ 
+	@Parameters({"browser"})
+	
 	@BeforeTest
-	public void test() {
+	public void test(String browserName) {
 		df = new DriverFactory();
 		prop = df.insit_prop();
+		
+		
+		if(browserName != null) {
+			prop.setProperty("browser", browserName);
+		}
+		
 		driver = df.insit_driver(prop);
 		loginpage = new LoginPage(driver);
 		softAssert = new SoftAssert();
